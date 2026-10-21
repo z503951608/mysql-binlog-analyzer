@@ -1,0 +1,40 @@
+server:
+  port: 8080
+  tomcat:
+    max-swallow-size: -1
+    connection-timeout: 120000
+
+spring:
+  application:
+    name: mysql-binlog-analyzer
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 4GB
+      max-request-size: 4GB
+      file-size-threshold: 2MB
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: non_null
+
+binlog:
+  # 离线 binlog 上传保存目录
+  upload-dir: ./data/binlogs
+  # 单次分析最多保留的 SQL 记录数，避免超大日志耗尽内存
+  max-results: 20000
+  # 在线分析到达最后一个 binlog 后，空闲多久自动结束（毫秒）
+  idle-timeout-ms: 3000
+  # mysqlbinlog 可执行文件路径（支持相对路径）；留空时依次尝试 MYSQLBINLOG_PATH、内置工具、系统 PATH
+  mysqlbinlog-path: ""
+  # 在线分析使用的从库 server-id
+  client-server-id: 20200621
+  # 分析任务在内存中的保留时长（分钟）
+  job-retention-minutes: 120
+  # 使用 mysqlbinlog 下载在线日志的超时时间（秒）
+  download-timeout-seconds: 300
+
+logging:
+  level:
+    root: INFO
+    com.binlog.analyzer: INFO
